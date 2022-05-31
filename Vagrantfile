@@ -16,12 +16,20 @@ Vagrant.configure("2") do |config|
   # Use any version between 15.2.31.300 and 15.2.31.570
   config.vm.box = "opensuse/Leap-15.2.x86_64"
   config.vm.box_version = "15.2.31.584"
+  config.vm.hostname = "k3s"
 
   # Disable automatic box update checking. If you disable this, then
   # boxes will only be checked for updates when the user runs
   # `vagrant box outdated`. This is not recommended.
   # config.vm.box_check_update = false
 
+  # Create a private network, which allows host-only access to the machine
+  # using a specific IP.
+  config.vm.network "private_network", ip: "192.168.33.10",  virtualbox__intnet: true
+  config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
+  config.vm.network "forwarded_port", guest: 22, host: 2000 # Master Node SSH
+  config.vm.network "forwarded_port", guest: 6443, host: 6443 # API Access
+  
   # Create a forwarded port mapping which allows access to a specific port
   # within the machine from a port on the host machine. In the example below,
   # accessing "localhost:8080" will access port 80 on the guest machine.
@@ -31,7 +39,7 @@ Vagrant.configure("2") do |config|
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   #config.vm.network "forwarded_port", guest: 8888, host: 8080 
   config.vm.network "forwarded_port", guest: 9090, host: 8888
-  config.vm.network "forwarded_port", guest: 3000, host: 3000
+  config.vm.network "forwarded_port", guest: 3000, host: 3000, id: "grafana-http", disabled: false
   config.vm.network "forwarded_port", guest: 3030, host: 3030
   config.vm.network "forwarded_port", guest: 8080, host: 8080
   config.vm.network "forwarded_port", guest: 16686, host: 8088
@@ -44,12 +52,6 @@ Vagrant.configure("2") do |config|
   # via 127.0.0.1 to disable public access
   # config.vm.network "forwarded_port", guest: 80, host: 8080, host_ip: "127.0.0.1"
 
-  # Create a private network, which allows host-only access to the machine
-  # using a specific IP.
-  config.vm.network "private_network", ip: "192.168.33.10",  virtualbox__intnet: true
-  config.vm.network "forwarded_port", guest: 22, host: 2222, id: "ssh", disabled: true
-  config.vm.network "forwarded_port", guest: 22, host: 2000 # Master Node SSH
-  config.vm.network "forwarded_port", guest: 6443, host: 6443 # API Access
     
   # Create a public network, which generally matched to bridged network.
   # Bridged networks make the machine appear as another physical device on
@@ -85,6 +87,10 @@ Vagrant.configure("2") do |config|
   # documentation for more information about their specific syntax and use.
   config.vm.provision "shell", inline: <<-SHELL
      sudo zypper --non-interactive install apparmor-parser
+	 sudo zypper --non-interactive install docker
+	 sudo systemctl start docker
+	 sudo systemctl enable docker
+	 sudo zypper --non-interactive install helm
   SHELL
 
   args = []
