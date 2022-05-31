@@ -6,6 +6,7 @@ helm repo add stable https://charts.helm.sh/stable
 helm repo update
 helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
 
+kubectl create namespace observability
 export namespace=observability
 export jaeger_version=v1.28.0
 kubectl create namespace ${namespace}
