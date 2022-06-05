@@ -2,6 +2,11 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   name: frontend-app
+  labels:
+    name: frontend
+    app: frontend
+  annotations:
+    "sidecar.jaegertracing.io/inject": "true"
 spec:
   replicas: 3
   selector:
@@ -22,6 +27,9 @@ apiVersion: v1
 kind: Service
 metadata:
   name: frontend-service
+  labels:
+    release: prometheus
+    app: frontend
 spec:
   selector:
     app: frontend
