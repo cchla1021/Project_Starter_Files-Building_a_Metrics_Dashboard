@@ -20,10 +20,17 @@ Create a dashboard in Grafana that shows Prometheus as a source. Take a screensh
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/Grafana-Prometheus-Basic-Dashboard.PNG)
 
 ## Describe SLO/SLI
-A Service-Level Indicator (SLI) is a specific metric used to measure the performance of a service. SLI is a general metric to measure uptime and latency. But truly what we require within the conclusion is a genuine estimation. based on an SLO of monthly uptime and request-response time. In this case, SLI would be the actual measurement of the uptime. Perhaps during that year, you actually achieved 99.5% uptime and request-response time or 97.3% uptime and request response time. These measurements are SLI. Notice that the above example is a ratio which is a measurement to a given amount of time (the measured uptime and request-response time per year).
+A Service-Level Objectives is a measurable goal set by the SRE team to ensure a standard level of performance during a specified period of time. Once we have a clear definition and objective for the level of performance we want to deliver then Service-Level Indicators (SLIs) comes in to do actual measurement of performance we defined in the SLO. In this case, SLI would be the actual measurement of the uptime. Perhaps during that year, you actually achieved 99.5% uptime and request-response time or 97.3% uptime and request response time. These measurements are SLI. Notice that the above example is a ratio which is a measurement to a given amount of time (the measured uptime and request-response time per year).
 
 ## Creating SLI metrics.
-*TODO:* It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
+It is important to know why we want to measure certain metrics for our customer. Describe in detail 5 metrics to measure these SLIs. 
+A Service-Level Indicator (SLI) is a specific metric used to measure the performance of a service. These metrics are relevant and built around the four signals (latency, Error Rate, Traffic, and Saturation)
+
+* Latency: Latency is important to monitor since this will tell the developers the time it takes for data to pass form one point to another.
+* Error Rate: Error rate is important to monitor since this will tell the developers the amount of errors that are appearing and at the rate they appear. This can point to more important errors by seeing how many of said errors appeared at a given rate the developers can know which will need to be a priority.
+* Traffic: Network is important to monitor since the developer can see how much bandwith is required for a service to function. With this data the developer can look for ways to decrese the amount of bandwith required.
+* Saturation: Uptime is important to monitor so that developers know the percentage of the time the service is running. If it drops below a certain point this can be cause for concern and if it was not tracked it would be hard to tell how the service is handling.
+
 
 ## Create a Dashboard to measure our SLIs
 *TODO:* Create a dashboard to measure the uptime of the frontend and backend services We will also want to measure to measure 40x and 50x errors. Create a dashboard that show these values over a 24 hour period and take a screenshot.
