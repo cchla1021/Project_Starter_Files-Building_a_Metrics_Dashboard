@@ -1,10 +1,11 @@
+./delete.sh
 ### Installing Grafana and Prometheus
-#kubectl create namespace monitoring
-#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
-## helm repo add stable https://kubernetes-charts.storage.googleapis.com # this is deprecated
-#helm repo add stable https://charts.helm.sh/stable
-#helm repo update
-#helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
+kubectl create namespace monitoring
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#helm repo add stable https://kubernetes-charts.storage.googleapis.com # this is deprecated
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 ## installa jaeger tracing
 kubectl create namespace observability
@@ -18,5 +19,3 @@ kubectl create -n ${namespace} -f https://raw.githubusercontent.com/jaegertracin
 kubectl create -n ${namespace} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/operator.yaml
 kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/cluster_role.yaml
 kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/cluster_role_binding.yaml
-
-
