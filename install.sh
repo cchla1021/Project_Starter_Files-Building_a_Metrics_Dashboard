@@ -1,11 +1,11 @@
-./delete.sh
+#./delete.sh
 ### Installing Grafana and Prometheus
-kubectl create namespace monitoring
-helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+#kubectl create namespace monitoring
+#helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
 #helm repo add stable https://kubernetes-charts.storage.googleapis.com # this is deprecated
-helm repo add stable https://charts.helm.sh/stable
-helm repo update
-helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
+#helm repo add stable https://charts.helm.sh/stable
+#helm repo update
+#helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 ## installa jaeger tracing
 kubectl create namespace observability
