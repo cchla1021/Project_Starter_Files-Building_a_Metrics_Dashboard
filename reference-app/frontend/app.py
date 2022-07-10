@@ -12,6 +12,7 @@ metrics = PrometheusMetrics(app, group_by='endpoint')
 
 # static information as metric
 metrics.info('app_info', 'Application info', version='1.0.3')
+
 metrics.register_default(
     metrics.counter(
         'by_path_counter', 'Request count by request paths',
@@ -23,6 +24,7 @@ by_endpoint_counter = metrics.counter(
     'by_endpoint_counter', 'Request count by request endpoint',
     labels={'endpoint': lambda: request.endpoint}
 )
+
 endpoints = ('error', 'foo', 'healthz')
 
 def init_tracer(service):
