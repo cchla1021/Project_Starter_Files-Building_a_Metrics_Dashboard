@@ -7,7 +7,7 @@
 ## Commands for Exposing the application
 * kubectl patch svc "fronte end-service" -p '{"spec": {"type": "LoadBalancer"}}'
 * kubectl port-forward svc/frontend-service 8080:8080
-
+* kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus --address 0.0.0.0 9090:9090
 
 ## Verify the monitoring installation
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/verify-installation.PNG)
