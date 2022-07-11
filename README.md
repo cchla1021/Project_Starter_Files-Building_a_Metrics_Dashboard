@@ -7,8 +7,9 @@
 ## Commands for Exposing the application
 * kubectl patch svc "fronte end-service" -p '{"spec": {"type": "LoadBalancer"}}'
 * kubectl port-forward svc/frontend-service 8080:8080
+
+# Setup the Jaeger and Prometheus source 
 * kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus --address 0.0.0.0 9090:9090
-# Add an ingress to cluster
 * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.3/deploy/static/provider/cloud/deploy.yaml
 
 ## Verify the monitoring installation
