@@ -32,6 +32,9 @@
 * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.3/deploy/static/provider/cloud/deploy.yaml
 * kubectl get svc -l app.kubernetes.io/instance=my-traces -n observability
 * kubectl port-forward -n observability svc/my-traces-query --address 0.0.0.0 16686:16686
+
+## Configuring Jaeger Data Source on Grafana
+![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/jaeger-grafana.PNG)
                                           
 ## Verify the monitoring installation
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/verify-installation.PNG)
