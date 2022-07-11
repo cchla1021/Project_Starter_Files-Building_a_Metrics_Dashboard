@@ -12,6 +12,15 @@
 * kubectl create namespace observability
 * export namespace=observability
 * export jaeger_version=v1.28.0
+* mkdir -p jaeger-tracing
+cat >> jaeger-tracing/jaeger.yaml <<EOF
+apiVersion: jaegertracing.io/v1
+kind: Jaeger
+metadata:
+  name: my-traces
+  namespace: ${namespace}
+EOF
+* kubectl apply -n ${namespace} -f jaeger-tracing/jaeger.yaml
 * kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/crds/jaegertracing.io_jaegers_crd.yaml
 * kubectl create -n ${namespace} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/service_account.yaml
 * kubectl create -n ${namespace} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/role.yaml
