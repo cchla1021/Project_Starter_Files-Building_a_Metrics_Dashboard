@@ -31,6 +31,7 @@
 * kubectl port-forward -n monitoring svc/prometheus-kube-prometheus-prometheus --address 0.0.0.0 9090:9090
 * kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/controller-v1.0.3/deploy/static/provider/cloud/deploy.yaml
 * kubectl get svc -l app.kubernetes.io/instance=my-traces -n observability
+* kubectl port-forward -n observability svc/my-traces-query --address 0.0.0.0 16686:16686
                                           
 ## Verify the monitoring installation
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/verify-installation.PNG)
