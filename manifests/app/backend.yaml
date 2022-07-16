@@ -22,7 +22,7 @@ spec:
       containers:
       - env:
         - name: JAEGER_AGENT_HOST
-          value: my-traces-agent.observability.svc.cluster.local
+          value: my-traces-query.observability.svc.cluster.local
         name: backend
         image: cchla1021/metrics-backend:latest
         imagePullPolicy: Always
