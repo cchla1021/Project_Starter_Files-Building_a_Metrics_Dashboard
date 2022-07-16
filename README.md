@@ -42,6 +42,12 @@ kubectl port-forward -n observability svc/my-traces-query --address 0.0.0.0 1668
 ```
 
 ## Configuring Jaeger Data Source on Grafana
+```
+ingress_name=$(kubectl get -n ${namespace} ingress -o jsonpath='{.items[0].metadata.name}'); \
+ingress_port=$(kubectl get -n ${namespace} ingress -o jsonpath='{.items[0].spec.defaultBackend.service.port.number}'); \
+echo -e "\n\n${ingress_name}.${namespace}.svc.cluster.local:${ingress_port}"
+```
+
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/jaeger-grafana.PNG)
                                           
 ## Verify the monitoring installation
