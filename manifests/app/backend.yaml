@@ -36,9 +36,6 @@ spec:
 apiVersion: v1
 kind: Service
 metadata:
-  annotations:
-    prometheus.io/port: "9090"
-    prometheus.io/scrape: "true"
   name: backend
   labels:
     app: backend
@@ -47,6 +44,7 @@ spec:
     app: backend
   ports:
     - name: backend
+      protocol: TCP
       port: 8081
       targetPort: backendport
   type: LoadBalancer
