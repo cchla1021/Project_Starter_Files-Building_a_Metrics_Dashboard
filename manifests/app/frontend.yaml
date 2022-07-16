@@ -5,7 +5,7 @@ metadata:
     prometheus.io/scrape: 'true'
     prometheus.io/path: /metrics
     prometheus.io/port: frontend
-  name: frontend-app
+  name: frontend
   labels:
     app: frontend
 spec:
