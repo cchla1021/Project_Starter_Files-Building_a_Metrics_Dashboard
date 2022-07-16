@@ -47,6 +47,7 @@ def init_tracer(service):
     return config.initialize_tracer()
 
 tracer = init_tracer('frontend')
+tracing = FlaskTracing(tracer, True, app)
 
 def random_endpoint():
     while True:
