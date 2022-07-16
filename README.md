@@ -14,6 +14,7 @@ kubectl create namespace observability
 export namespace=observability
 export jaeger_version=v1.28.0
 mkdir -p jaeger-tracing
+
 cat >> jaeger-tracing/jaeger.yaml <<EOF
 apiVersion: jaegertracing.io/v1
 kind: Jaeger
@@ -21,6 +22,7 @@ metadata:
  name: my-traces
  namespace: ${namespace}
 EOF
+
 kubectl apply -n ${namespace} -f jaeger-tracing/jaeger.yaml
 kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/crds/jaegertracing.io_jaegers_crd.yaml
 kubectl create -n ${namespace} -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/service_account.yaml
@@ -34,6 +36,7 @@ kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/cont
 kubectl get svc -l app.kubernetes.io/instance=my-traces -n observability
 kubectl port-forward -n observability svc/my-traces-query --address 0.0.0.0 16686:16686
 ```
+
 ## Configuring Jaeger Data Source on Grafana
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/jaeger-grafana.PNG)
                                           
