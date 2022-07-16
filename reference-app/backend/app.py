@@ -4,6 +4,7 @@ from prometheus_flask_exporter import PrometheusMetrics
 import pymongo
 from flask_pymongo import PyMongo
 from jaeger_client import Config
+from flask_opentracing import FlaskTracing
 from os import getenv
 import logging
 
@@ -53,6 +54,7 @@ def init_tracer(service):
     return config.initialize_tracer()
 
 tracer = init_tracer('backend')
+tracing = FlaskTracing(tracer, True, app)
 
 @app.route('/')
 @endpoint_counter
