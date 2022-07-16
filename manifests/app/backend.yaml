@@ -8,7 +8,7 @@ metadata:
     "sidecar.jaegertracing.io/inject": "true"
     prometheus.io/scrape: "true"
     prometheus.io/path: /metrics
-    prometheus.io/port: 8080
+    prometheus.io/port: backendport
   name: backend
 spec:
   replicas: 3
@@ -28,7 +28,9 @@ spec:
         imagePullPolicy: Always
         name: backend
         ports:
-        - containerPort: 8080
+        - name: backendport
+          containerPort: 8080
+          protocol: TCP
       restartPolicy: Always
 ---
 apiVersion: v1
@@ -46,7 +48,7 @@ spec:
   ports:
     - name: backend
       port: 8081
-      targetPort: 8080
+      targetPort: backendport
   type: LoadBalancer
 ---
 apiVersion: monitoring.coreos.com/v1
