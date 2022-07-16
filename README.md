@@ -1,12 +1,16 @@
 **Note:** For the screenshots, you can store all of your answer images in the `answer-img` directory.
 
 ## Commands for Exposing Grafana - Resolve Unable to access project on localhost:3000
-* kubectl patch svc "prometheus-grafana" --namespace "monitoring" -p '{"spec": {"type": "LoadBalancer"}}'
-* kubectl --namespace monitoring port-forward svc/prometheus-grafana --address 0.0.0.0 3000:80
+```
+kubectl patch svc "prometheus-grafana" --namespace "monitoring" -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl --namespace monitoring port-forward svc/prometheus-grafana --address 0.0.0.0 3000:80
+```
 
 ## Commands for Exposing the application
-* kubectl patch svc "fronte end-service" -p '{"spec": {"type": "LoadBalancer"}}'
-* kubectl port-forward svc/frontend-service 8080:8080
+```
+kubectl patch svc "fronte end-service" -p '{"spec": {"type": "LoadBalancer"}}'
+kubectl port-forward svc/frontend-service 8080:8080
+```
 
 # Setup the Jaeger and Prometheus source 
 ```
