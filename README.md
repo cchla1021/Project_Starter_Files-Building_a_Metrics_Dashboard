@@ -51,7 +51,7 @@ echo -e "\n\n${ingress_name}.${namespace}.svc.cluster.local:${ingress_port}"
 ```
 
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/jaeger-grafana.PNG)
-                                          
+Copy the echoed URL (including port number) above and open Grafana UI to add the data source, ensure that the link is successful by selecting save&test                                          
 ## Verify the monitoring installation
 ![pods](https://github.com/cchla1021/Project_Starter_Files-Building_a_Metrics_Dashboard/blob/main/answer-img/verify-installation.PNG)
 
