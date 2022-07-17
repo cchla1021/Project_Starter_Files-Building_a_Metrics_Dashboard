@@ -5,6 +5,7 @@ import pymongo
 from flask_pymongo import PyMongo
 from prometheus_flask_exporter import PrometheusMetrics
 from jaeger_client import Config
+from flask_opentracing import FlaskTracing
 import logging
 from os import getenv
 
@@ -72,6 +73,7 @@ def init_tracer(service):
     return config.initialize_tracer()
 
 tracer = init_tracer('backend')
+tracing = FlaskTracing(tracer, True, app)
 
 @app.errorhandler(InvalidHandle)
 def handle_invalid_usage(error):
