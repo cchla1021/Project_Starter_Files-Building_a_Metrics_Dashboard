@@ -22,7 +22,7 @@ spec:
     spec:
       containers:
       - name: frontend
-           image: cchla1021/metrics-backend:latest
+        image: cchla1021/metrics-backend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
