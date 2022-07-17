@@ -1,5 +1,15 @@
 **Note:** For the screenshots, you can store all of your answer images in the `answer-img` directory.
 
+## Installing Grafana and Prometheus
+```
+kubectl create namespace monitoring
+helm repo add prometheus-community https://prometheus-community.github.io/helm-charts
+# helm repo add stable https://kubernetes-charts.storage.googleapis.com # this is deprecated
+helm repo add stable https://charts.helm.sh/stable
+helm repo update
+helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
+```
+
 ## Commands for Exposing Grafana - Resolve Unable to access project on localhost:3000
 ```
 kubectl patch svc "prometheus-grafana" --namespace "monitoring" -p '{"spec": {"type": "LoadBalancer"}}'
