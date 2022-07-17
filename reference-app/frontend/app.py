@@ -1,105 +1,80 @@
-from flask import Flask, render_template, request
-
+from flask import Flask, render_template, jsonify, request
+import threading
+import requests
+import random
+import time
+from prometheus_flask_exporter import PrometheusMetrics
 import logging
 from jaeger_client import Config
-from prometheus_flask_exporter import PrometheusMetrics
 
 app = Flask(__name__)
-metrics = PrometheusMetrics(app)
+metrics = PrometheusMetrics(app, group_by='endpoint')
 
-# static information as metric. Adapted from https://github.com/rycus86/prometheus_flask_exporter/blob/master/examples/sample-signals/app/app.py
+# static information as metric
 metrics.info('app_info', 'Application info', version='1.0.3')
+metrics.register_default(
+    metrics.counter(
+        'by_path_counter', 'Request count by request paths',
+        labels={'path': lambda: request.path}
+    )
+)
 
-by_full_path_counter = metrics.counter('full_path_counter', 'counting requests by full path', labels={
-                                       'full_path': lambda: request.full_path})
+by_endpoint_counter = metrics.counter(
+    'by_endpoint_counter', 'Request count by request endpoint',
+    labels={'endpoint': lambda: request.endpoint}
+)
+endpoints = ('error', 'foo', 'healthz')
 
-by_endpoint_counter = metrics.counter('endpoint_counter', 'counting requestby endpoint', labels={
-                                      'endpoint': lambda: request.endpoint})
-
-# Tracing Initialization
-
-
-def init_tracer(service_name="fronend-service"):
+def init_tracer(service):
     logging.getLogger('').handlers = []
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
     config = Config(
         config={
+            'sampler': {
+                'type': 'const',
+                'param': 1,
+            },
             'logging': True,
         },
-        service_name=service_name,
-        validate=True
+        service_name=service,
     )
 
+    # this call also sets opentracing.tracer
     return config.initialize_tracer()
 
+tracer = init_tracer('frontend')
 
-tracer = init_tracer("fronend-service")
+def random_endpoint():
+    while True:
+        try:
+            target = random.choice(endpoints)
+            requests.get("http://app:8081/%s" % target, timeout=1)
 
+        except:
+            pass
 
-@app.route("/")
-@by_full_path_counter
+@app.route('/')
 @by_endpoint_counter
 def homepage():
-    with tracer.start_span('homepage-span') as span:
-        span.set_tag('homepage-tag', '90')
-        return render_template("main.html")
+    return render_template("main.html")
+    with tracer.start_span('random_endpoint') as span:
+        threading.Thread(target=random_endpoint).start()
+        for _ in range(4):
+            thread = threading.Thread(target=random_endpoint)
+            thread.daemon = True
+            thread.start()
+
+        while True:
+            time.sleep(1)
+    
 
 
-class InvalidUsage(Exception):
-    status_code = 400
+@app.route('/healthz')
+@by_endpoint_counter
+def healthcheck():
+    app.logger.info('Status request successfull')
+    return jsonify({"result": "OK - healthy"})
 
-    def __init__(self, message, status_code=None, payload=None):
-        Exception.__init__(self)
-        self.message = message
-        if status_code is not None:
-            self.status_code = status_code
-        self.payload = payload
-
-    def to_dict(self):
-        rv = dict(self.payload or ())
-        rv["message"] = self.message
-        return rv
-
-
-@app.errorhandler(InvalidUsage)
-def handle_invalid_usage(error):
-    response = jsonify(error.to_dict())
-    response.status_code = error.status_code
-    return response
-
-
-@app.route("/403")
-def status_code_403():
-    status_code = 403
-    raise InvalidUsage(
-        "Raising status code: {}".format(status_code), status_code=status_code
-    )
-
-
-@app.route("/404")
-def status_code_404():
-    status_code = 404
-    raise InvalidUsage(
-        "Raising status code: {}".format(status_code), status_code=status_code
-    )
-
-
-@app.route("/500")
-def status_code_500():
-    status_code = 500
-    raise InvalidUsage(
-        "Raising status code: {}".format(status_code), status_code=status_code
-    )
-
-
-@app.route("/503")
-def status_code_503():
-    status_code = 503
-    raise InvalidUsage(
-        "Raising status code: {}".format(status_code), status_code=status_code
-    )
-
-
-if __name__ == "__main__":
-    app.run(threaded=True)
+if __name__ == "__main__":    
+    app.run()

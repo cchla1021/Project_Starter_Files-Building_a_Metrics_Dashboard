@@ -26,13 +26,6 @@ spec:
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
-        resources:
-            requests:
-              cpu: 25m
-              memory: 64Mi
-            limits:
-              cpu: 410m
-              memory: 512Mi
       restartPolicy: Always
 ---
 apiVersion: v1
