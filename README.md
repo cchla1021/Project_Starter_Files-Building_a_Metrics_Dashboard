@@ -10,7 +10,7 @@ kubectl --namespace monitoring port-forward svc/prometheus-grafana --address 0.0
 ```
 kubectl patch svc "frontend" -p '{"spec": {"type": "LoadBalancer"}}'
 #kubectl port-forward svc/frontend 8080:8080
-kubectl port-forward svc/frontend --address 0.0.0.0 8080:8080
+kubectl port-forward svc/frontend-service --address 0.0.0.0 8080:8080
 ```
 
 # Setup the Jaeger and Prometheus source 
