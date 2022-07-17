@@ -7,3 +7,6 @@ echo "-------------------------------------------------------"
 echo "observability namespace"
 kubectl get deployment,pods,svc -n observability
 echo "-------------------------------------------------------"
+echo "kube-system namespace"
+kubectl get pods -n kube-system
+echo "-------------------------------------------------------"
