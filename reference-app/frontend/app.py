@@ -6,7 +6,6 @@ import time
 from prometheus_flask_exporter import PrometheusMetrics
 import logging
 from jaeger_client import Config
-from flask_opentracing import FlaskTracing
 
 app = Flask(__name__)
 metrics = PrometheusMetrics(app, group_by='endpoint')
@@ -45,7 +44,6 @@ def init_tracer(service):
     return config.initialize_tracer()
 
 tracer = init_tracer('frontend')
-tracing = FlaskTracing(tracer, True, app)
 
 def random_endpoint():
     while True:
