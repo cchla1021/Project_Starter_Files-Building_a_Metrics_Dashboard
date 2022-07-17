@@ -4,9 +4,6 @@ metadata:
   namespace: observability
   annotations:
     sidecar.jaegertracing.io/inject: 'true'
-    prometheus.io/scrape: "true"
-    prometheus.io/path: /metrics
-    prometheus.io/port: backendport
   labels:
     name: backend
     release: prometheus
