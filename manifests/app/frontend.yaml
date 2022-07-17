@@ -7,7 +7,6 @@ metadata:
     prometheus.io/path: /metrics
     prometheus.io/port: frontend
   name: frontend
-  namespace: observability
   labels:
     app: frontend
 spec:
@@ -35,7 +34,6 @@ metadata:
     prometheus.io/port: "9090"
     prometheus.io/scrape: "true"
   name: frontend
-  namespace: observability
   labels:
     app: frontend
 spec:
@@ -65,4 +63,4 @@ spec:
     interval: 15s
   namespaceSelector:
     matchNames:
-    - observability
+    - default
