@@ -8,8 +8,9 @@
 #helm install prometheus prometheus-community/kube-prometheus-stack --namespace monitoring --kubeconfig /etc/rancher/k3s/k3s.yaml
 
 ## installa jaeger tracing
-kubectl create namespace observability
-export namespace=observability
+#kubectl create namespace observability
+#export namespace=observability
+export namespace=default
 export jaeger_version=v1.28.0
 kubectl create namespace ${namespace}
 kubectl create -f https://raw.githubusercontent.com/jaegertracing/jaeger-operator/${jaeger_version}/deploy/crds/jaegertracing.io_jaegers_crd.yaml

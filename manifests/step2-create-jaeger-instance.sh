@@ -1,4 +1,5 @@
-export namespace=observability
+#export namespace=observability
+export namespace=default
 kubectl apply -n ${namespace} -f jaeger-tracing/jaeger.yaml
 
 kubectl get  -n ${namespace} pods,svc
