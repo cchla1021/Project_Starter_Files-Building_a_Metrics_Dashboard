@@ -2,6 +2,7 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
+    "sidecar.jaegertracing.io/inject": "true"
     prometheus.io/scrape: 'true'
     prometheus.io/path: /metrics
     prometheus.io/port: frontend
@@ -21,7 +22,7 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: cchla1021/metrics-backend:latest
+           image: cchla1021/metrics-backend:latest
         imagePullPolicy: Always
         ports:
         - containerPort: 8080
