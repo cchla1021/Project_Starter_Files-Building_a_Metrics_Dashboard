@@ -3,6 +3,9 @@ kind: Deployment
 metadata:
   annotations:
     "sidecar.jaegertracing.io/inject": "true"
+    prometheus.io/scrape: 'true'
+    prometheus.io/path: /metrics
+    prometheus.io/port: frontend
   name: backend-app
 spec:
   replicas: 3
