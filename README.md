@@ -8,8 +8,7 @@ kubectl --namespace monitoring port-forward svc/prometheus-grafana --address 0.0
 
 ## Commands for Exposing the application
 ```
-kubectl patch svc "frontend" -p '{"spec": {"type": "LoadBalancer"}}'
-#kubectl port-forward svc/frontend 8080:8080
+kubectl patch svc "frontend-service" -p '{"spec": {"type": "LoadBalancer"}}'
 kubectl port-forward svc/frontend-service --address 0.0.0.0 8080:8080
 ```
 
