@@ -2,14 +2,13 @@ apiVersion: apps/v1
 kind: Deployment
 metadata:
   annotations:
-    prometheus.io/scrape: "true"
+    prometheus.io/scrape: 'true'
     prometheus.io/path: /metrics
-    prometheus.io/port: frontendport
-  labels:
-    name: frontend
-    release: prometheus
-  name: frontend
+    prometheus.io/port: frontend
+  name: frontend-app
   namespace: observability
+  labels:
+    app: frontend
 spec:
   replicas: 3
   selector:
@@ -22,17 +21,19 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: cchla1021/metrics-frontend:latest
+        image: catzzzlol/frontend:latest
         imagePullPolicy: Always
         ports:
-        - name: frontendport
-          containerPort: 8080
-          protocol: TCP
+        - containerPort: 8080
+      restartPolicy: Always
 ---
 apiVersion: v1
 kind: Service
 metadata:
-  name: frontend
+  annotations:
+    prometheus.io/port: "9090"
+    prometheus.io/scrape: "true"
+  name: frontend-service
   namespace: observability
   labels:
     app: frontend
@@ -41,9 +42,8 @@ spec:
     app: frontend
   ports:
     - name: frontend
-      protocol: TCP
       port: 8080
-      targetPort: frontendport
+      targetPort: 8080
   type: LoadBalancer
 ---
 apiVersion: monitoring.coreos.com/v1
