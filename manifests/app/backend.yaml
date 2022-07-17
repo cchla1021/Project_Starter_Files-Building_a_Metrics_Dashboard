@@ -8,7 +8,6 @@ metadata:
     prometheus.io/port: backendport
   labels:
     name: backend
-    namespace: observability
     release: prometheus
   name: backend
 spec:
@@ -41,7 +40,6 @@ metadata:
     prometheus.io/port: "9090"
     prometheus.io/scrape: "true"
   name: backend
-  namespace: observability
   labels:
     app: backend
 spec:
@@ -72,4 +70,4 @@ spec:
     interval: 15s
   namespaceSelector:
     matchNames:
-    - observability
+    - default
