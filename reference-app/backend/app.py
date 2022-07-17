@@ -36,7 +36,7 @@ logger = logging.getLogger(__name__)
 # Tracing Initialization
 
 
-def init_tracer(service_name="backend-service"):
+def init_tracer(service):
     logging.getLogger('').handlers = []
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
 
@@ -47,11 +47,9 @@ def init_tracer(service_name="backend-service"):
                 'param': 1,
             },
             'logging': True,
-            'local_agent': {
-                'reporting_host': 'my-traces-query.default.svc.cluster.local'
-            }
+            'local_agent': {'reporting_host': JAEGER_AGENT_HOST},
         },
-        service_name=service_name,
+        service_name=service,
         validate=True
     )
 
