@@ -48,7 +48,7 @@ def init_tracer(service_name="backend-service"):
             },
             'logging': True,
             'local_agent': {
-                'reporting_host': 'my-traces-agent.observability.svc.cluster.local'
+                'reporting_host': 'my-traces-query.observability.svc.cluster.local'
             }
         },
         service_name=service_name,
@@ -59,7 +59,7 @@ def init_tracer(service_name="backend-service"):
 
 
 tracer = init_tracer("backend-service")
-
+tracing = FlaskTracing(tracer, True, app)
 
 @app.route("/")
 @by_full_path_counter
