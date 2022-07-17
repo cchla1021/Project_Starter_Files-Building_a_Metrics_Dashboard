@@ -2,10 +2,13 @@
 # https://hub.docker.com/_/python
 FROM python:3.7-slim
 
-LABEL maintainer="Joe Chien"
-
 # Copy local code to the container image.
 ENV APP_HOME /app
+
+ENV PROMETHEUS_MULTIPROC_DIR /tmp/prometheus-multiproc
+
+RUN rm -rf /tmp/prometheus-multiproc
+RUN mkdir -p /tmp/prometheus-multiproc
 
 WORKDIR $APP_HOME
 COPY . ./
@@ -13,7 +16,6 @@ COPY . ./
 # Install production dependencies.
 RUN apt-get update && \
     pip install --upgrade pip && \
-    pip install Flask-Opentracing && \
     pip install -r requirements.txt
 
 CMD ["gunicorn", "--access-logfile", "-", "--error-logfile", "-", "-w", "4", "-b", "0.0.0.0:8080", "app:app"]
