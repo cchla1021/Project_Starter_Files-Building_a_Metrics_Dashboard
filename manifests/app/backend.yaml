@@ -8,6 +8,7 @@ metadata:
     prometheus.io/port: backendport
   labels:
     name: backend
+    namespace: observability
     release: prometheus
   name: backend
 spec:
