@@ -43,6 +43,7 @@ spec:
     - name: frontend
       port: 8080
       targetPort: 8080
+      nodePort: 30000
   type: LoadBalancer
 ---
 apiVersion: monitoring.coreos.com/v1
