@@ -1,25 +1,23 @@
-# import libraries
-from flask import Flask, render_template, request, jsonify, json
-from prometheus_flask_exporter import PrometheusMetrics
+from flask import Flask, render_template, request, jsonify
+import time
+import random
 import pymongo
 from flask_pymongo import PyMongo
+from prometheus_flask_exporter import PrometheusMetrics
 from jaeger_client import Config
-from flask_opentracing import FlaskTracing
-from os import getenv
 import logging
+from os import getenv
 
-# Define the Jaeger host which is referenced in the yaml file
-JAEGER_HOST = getenv('JAEGER_HOST', 'localhost')
-# Define the app
 app = Flask(__name__)
 
 app.config['MONGO_DBNAME'] = 'example-mongodb'
 app.config['MONGO_URI'] = 'mongodb://example-mongodb-svc.default.svc.cluster.local:27017/example-mongodb'
+
 mongo = PyMongo(app)
-# Expose the metrics 
 metrics = PrometheusMetrics(app, group_by='endpoint')
-metrics.info('app_info', 'Application Info', version='1.0.3')
-# Register extra metrics
+
+# static information as metric
+metrics.info('app_info', 'Application info', version='1.0.3')
 metrics.register_default(
     metrics.counter(
         'by_path_counter', 'Request count by request paths',
@@ -27,13 +25,33 @@ metrics.register_default(
     )
 )
 
-# Apply the same metric to all of the endpoints
-endpoint_counter = metrics.counter(
-    'endpoint_counter', 'Request count by endpoints',
+by_endpoint_counter = metrics.counter(
+    'by_endpoint_counter', 'Request count by request endpoint',
     labels={'endpoint': lambda: request.endpoint}
 )
 
-# Define the tracer
+JAEGER_AGENT_HOST = getenv('JAEGER_AGENT_HOST', 'localhost')
+
+class InvalidHandle(Exception):
+    status_code = 400
+
+    def __init__(self, message, status_code=None, payload=None):
+        Exception.__init__(self)
+        self.message = message
+        if status_code is not None:
+            self.status_code = status_code
+        self.payload = payload
+
+    def to_dict(self):
+        error_message = dict(self.payload or ())
+        error_message['message'] = self.message
+        return error_message
+
+@app.route('/error')
+@by_endpoint_counter
+def oops():
+    return ':(', 500
+
 def init_tracer(service):
     logging.getLogger('').handlers = []
     logging.basicConfig(format='%(message)s', level=logging.DEBUG)
@@ -45,7 +63,7 @@ def init_tracer(service):
                 'param': 1,
             },
             'logging': True,
-            'local_agent': {'reporting_host': JAEGER_HOST},
+            'local_agent': {'reporting_host': JAEGER_AGENT_HOST},
         },
         service_name=service,
     )
@@ -54,38 +72,34 @@ def init_tracer(service):
     return config.initialize_tracer()
 
 tracer = init_tracer('backend')
-tracing = FlaskTracing(tracer, True, app)
+
+@app.errorhandler(InvalidHandle)
+def handle_invalid_usage(error):
+    response = jsonify(error.to_dict())
+    response.status_code = error.status_code
+    return response
+
+@app.route('/foo')
+@by_endpoint_counter
+def get_error():
+    raise InvalidHandle('error occur', status_code=410)
 
 @app.route('/')
-@endpoint_counter
-def homepage():
+@by_endpoint_counter
+def homepage(): 
     with tracer.start_span('hello-world'):
-        message = "Hello World"
-    return message
-
+        return "Hello World"
 
 @app.route('/api')
-@endpoint_counter
+@by_endpoint_counter
 def my_api():
     with tracer.start_span('api'):
         answer = "something"
     return jsonify(repsonse=answer)
 
-# Healthcheck status
-@endpoint_counter
-@app.route('/status')
-def healthcheck():
-    response = app.response_class(
-            response=json.dumps({"result":"OK - healthy"}),
-            status=200,
-            mimetype='application/json'
-    )
-    app.logger.info('Status request successfull')
-    return response
-
-# This will return an error
+# This will return 405 error
 @app.route('/star', methods=['POST'])
-@endpoint_counter
+@by_endpoint_counter
 def add_star():
   star = mongo.db.stars
   name = request.json['name']
@@ -95,5 +109,12 @@ def add_star():
   output = {'name' : new_star['name'], 'distance' : new_star['distance']}
   return jsonify({'result' : output})
 
+@app.route('/healthz')
+@by_endpoint_counter
+def healthcheck():
+    app.logger.info('Status request successfull')
+    return jsonify({"result": "OK - healthy"})
+    
+
 if __name__ == "__main__":
-    app.run()
+    app.run(threaded=True)
